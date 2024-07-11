@@ -1,0 +1,58 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url "https://maven.google.com"
+        }
+        maven { url 'https://artifacts.applovin.com/android' }
+        maven { url "https://android-sdk.is.com" }
+        maven { url "https://artifact.bytedance.com/repository/pangle" }
+        maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" }
+        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+
+        classpath 'cn.thinkingdata.android:android-gradle-plugin2:2.1.0'
+
+        classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:5.0.7"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+        flatDir {
+            dirs 'libs'
+        }
+        maven { url "https://android-sdk.is.com/" }
+        maven {
+            url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea"
+        }
+        maven {
+            url "https://s3.amazonaws.com/smaato-sdk-releases/" // Assets/MaxSdk/Mediation/Smaato/Editor/Dependencies.xml:8
+        }
+        maven {
+            url "https://artifact.bytedance.com/repository/pangle" // Assets/MaxSdk/Mediation/ByteDance/Editor/Dependencies.xml:8
+        }
+        maven { url "https://cboost.jfrog.io/artifactory/chartboost-ads/" }
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

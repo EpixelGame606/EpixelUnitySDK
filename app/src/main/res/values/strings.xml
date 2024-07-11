@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">UnitySDK</string>
+    <string name="facebook_app_id">fb782089267016655</string>
+    <string name="facebook_client_token">4457c654037de6c4d0be872fbb8f26d7</string>
+</resources>

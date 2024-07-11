@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'applovin-quality-service'
+
+android {
+    compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId 'com.epixel.sdk.unity'
+        minSdkVersion 22
+        targetSdkVersion 34
+        versionCode 100
+        versionName '1.0.0'
+        multiDexEnabled true
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+        resConfigs "en", "US"
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.com.parkour.world.race.runner.AndroidJUnitRunner"
+    }
+
+    aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+
+    packagingOptions {
+        doNotStrip "*/armeabi-v7a/libA3AEECD8.so"
+        doNotStrip "*/x86_64/libA3AEECD8.so"
+        pickFirst 'lib/armeabi-v7a/libFirebaseCppRemoteConfig.so'
+        pickFirst 'lib/arm64-v8a/libFirebaseCppRemoteConfig.so'
+        pickFirst 'lib/x86/libFirebaseCppRemoteConfig.so'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt', 'proguard-user.txt', 'proguard-rules.pro', 'proguard-ubase.txt'
+            jniDebuggable true
+            shrinkResources false
+        }
+        daily {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt', 'proguard-user.txt', 'proguard-rules.pro', 'proguard-ubase.txt'
+            shrinkResources false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-unity.txt', 'proguard-user.txt', 'proguard-rules.pro', 'proguard-ubase.txt'
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    testImplementation 'junit:junit:4.12'
+
+    implementation "androidx.multidex:multidex:2.0.1"
+
+    api project(':sdk')
+}
+
+applovin {
+    apiKey "HvGKRlloQJglOLGoGK8Vm9iiG4_676cEQpFrM0fZLEQ8cuZs2EMQqRxqPo76HW6fwTZ8OKzaPAA9v2IpsnD6QG"
+}

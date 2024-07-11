@@ -1,0 +1,7 @@
+{
+    "privacyPolicy": "https://epixelgame.com/Privacy-Policy",
+    "termsOfService": "https://epixelgame.com/end-user-license-agreement/",
+    "defaultRewardAdUnit": "default_reward",
+    "defaultInterstitialAdUnit": "default_interstitial",
+    "defaultBannerAdUnit": "default_banner"
+}
