@@ -40,6 +40,7 @@ public class AdsImpl implements IAds {
     private String mPreloadInterstitialAdTu = null;
     private String mPreloadBannerAdTu = null;
 
+    // connect reward ads in game with specific applovin ad unit
     @Override
     public void addRewardAdUnit(String adKey, String adUnitId) {
         SDKConfig sdkConfig = UnitySDK.getSdkConfig();
@@ -49,6 +50,7 @@ public class AdsImpl implements IAds {
         sdkConfig.rewardAdUnits.add(adUnitConfig);
     }
 
+    // connect interstitial ads in game with specific applovin ad unit
     @Override
     public void addInterstitialAdUnit(String adKey, String adUnitId) {
         SDKConfig sdkConfig = UnitySDK.getSdkConfig();
@@ -58,6 +60,7 @@ public class AdsImpl implements IAds {
         sdkConfig.interstitialAdUnits.add(adUnitConfig);
     }
 
+    // connect banner ads in game with specific applovin ad unit
     @Override
     public void addBannerAdUnit(String adKey, String adUnitId) {
         SDKConfig sdkConfig = UnitySDK.getSdkConfig();
@@ -67,6 +70,7 @@ public class AdsImpl implements IAds {
         sdkConfig.bannerAdUnits.add(adUnitConfig);
     }
 
+    // register listener from Unity game
     @Override
     public void setListener(UnityAdListener listener) {
         if (listener != null) {
@@ -74,12 +78,14 @@ public class AdsImpl implements IAds {
         }
     }
 
+    // init applovin on main thread
     @Override
     public void init() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(this::requestConsent);
     }
 
+    // check if rewarded ad is ready
     @Override
     public boolean isRewardedAdReady(String adKey) {
         if (!mInitializeFinished) {
@@ -93,6 +99,7 @@ public class AdsImpl implements IAds {
         return rewardedAd.isReady();
     }
 
+    // load a rewarded ad
     @Override
     public void loadRewardedAd(String adKey) {
         if (!mInitializeFinished) {
@@ -114,6 +121,7 @@ public class AdsImpl implements IAds {
         });
     }
 
+    // show rewarded ad
     public void showRewardedAd(String adKey) {
         if (!mInitializeFinished) {
             return;
@@ -139,6 +147,7 @@ public class AdsImpl implements IAds {
 
     private final HashMap<String, MaxInterstitialAd> mInterstitialAds = new HashMap<>();
 
+    // load a interstitial ad
     @Override
     public void loadInterstitialAd(String adKey) {
         if (!mInitializeFinished) {
@@ -160,10 +169,11 @@ public class AdsImpl implements IAds {
             interstitialAd.setListener(adListener);
             interstitialAd.setRevenueListener(adListener);
             interstitialAd.loadAd();
-            mInterstitialAds.put(adKey, interstitialAd);
+            mInterstitialAds.put(adUnitConfig.adUnitId, interstitialAd);
         });
     }
 
+    // check if interstitial ad is ready to show
     @Override
     public boolean isInterstitialAdReady(String adKey) {
         if (!mInitializeFinished) {
@@ -177,6 +187,7 @@ public class AdsImpl implements IAds {
         return ad != null && ad.isReady();
     }
 
+    // show interstitial ad
     @Override
     public void showInterstitialAd(String adKey) {
         if (!mInitializeFinished) {
@@ -192,13 +203,13 @@ public class AdsImpl implements IAds {
                 }
                 return;
             }
-            MaxInterstitialAd interstitialAd = mInterstitialAds.get(adKey);
+            MaxInterstitialAd interstitialAd = mInterstitialAds.get(adUnitConfig.adUnitId);
             if (interstitialAd != null && interstitialAd.isReady()) {
                 InterstitialAdListener adListener = new InterstitialAdListener(adKey, mUnityAdListener);
                 interstitialAd.setListener(adListener);
                 interstitialAd.setRevenueListener(adListener);
                 interstitialAd.showAd(UnityPlayer.currentActivity);
-                mInterstitialAds.remove(adKey);
+                mInterstitialAds.remove(adUnitConfig.adUnitId);
             }
             else {
                 SDKLog.e("interstitial ad not load");
@@ -210,6 +221,7 @@ public class AdsImpl implements IAds {
     }
 
     private final HashMap<String, MaxAdView> mBannerAds = new HashMap<>();
+    // show banner ad on bottom of the game
     @Override
     public void showBannerAd(String adKey) {
         if (!mInitializeFinished) {
@@ -246,10 +258,11 @@ public class AdsImpl implements IAds {
 
             maxAdView.loadAd();
 
-            mBannerAds.put(adKey, maxAdView);
+            mBannerAds.put(adUnitConfig.adUnitId, maxAdView);
         });
     }
 
+    // hide banner ad
     @Override
     public void hideBannerAd(String adKey) {
         mPreloadBannerAdTu = null;
@@ -264,7 +277,7 @@ public class AdsImpl implements IAds {
             }
             MaxAdView maxAdView = mBannerAds.get(adUnitConfig.adUnitId);
             if (maxAdView != null) {
-                mBannerAds.remove(adKey);
+                mBannerAds.remove(adUnitConfig.adUnitId);
                 ViewGroup parent = (ViewGroup)maxAdView.getParent();
                 if (parent != null) {
                     parent.removeView(maxAdView);
@@ -274,6 +287,7 @@ public class AdsImpl implements IAds {
         });
     }
 
+    // init applovin ads
     private void doInit(Context context) {
         if (mInitialized) {
             return;
@@ -310,6 +324,7 @@ public class AdsImpl implements IAds {
         mInitialized = true;
     }
 
+    // request consent before loading ads
     private void requestConsent() {
         Activity activity = UnityPlayer.currentActivity;
         Context context = activity.getApplicationContext();
@@ -344,6 +359,11 @@ public class AdsImpl implements IAds {
         if (canRequestAds) {
             doInit(context);
         }
+    }
+
+    // open applovin debug tool
+    public void showDebugger() {
+        AppLovinSdk.getInstance(UnityPlayer.currentActivity).showMediationDebugger();
     }
 
 }

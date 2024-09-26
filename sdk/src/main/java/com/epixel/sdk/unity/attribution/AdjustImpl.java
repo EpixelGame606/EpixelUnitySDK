@@ -33,6 +33,7 @@ public class AdjustImpl implements IAdjust {
     private boolean mInitialized = false;
     private boolean mNeedResume = false;
 
+    // initialize applovin and record app session
     @Override
     public void init(Application application, SDKConfig sdkConfig) {
         mInitialized = false;
@@ -82,9 +83,12 @@ public class AdjustImpl implements IAdjust {
         });
     }
 
+    // check if Adjust is configured
     private boolean hasAdjust() {
         return !TextUtils.isEmpty(mSDKConfig.adjustToken);
     }
+
+    // try to get GAID
     private String getDeviceId(Context context) {
         SharedPreferences sp = Utils.getSharedPreferences(context);
         String deviceId = sp.getString("sdk_adjust_device_id", null);
@@ -103,35 +107,41 @@ public class AdjustImpl implements IAdjust {
         }
     }
 
+    // send ad revenue to adjust
     @Override
     public void trackAdRevenue(String adsTuKey, String network, String placement, double revenue, String currency) {
-//        if (!hasAdjust()) {
-//            return;
-//        }
-//        AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_APPLOVIN_MAX);
-//        adRevenue.setAdRevenueUnit(adsTuKey);
-//        adRevenue.setRevenue(revenue, currency);
-//        adRevenue.setAdRevenueNetwork(network);
-//        adRevenue.setAdRevenuePlacement(placement);
-//        Adjust.trackAdRevenue(adRevenue);
+        if (!hasAdjust()) {
+            return;
+        }
+        SDKLog.i("Adjust", "track ad revenue " + network + "," + revenue + "" + currency);
+        AdjustAdRevenue adRevenue = new AdjustAdRevenue("applovin_max_sdk");
+        adRevenue.setAdRevenueUnit(adsTuKey);
+        adRevenue.setRevenue(revenue, currency);
+        adRevenue.setAdRevenueNetwork(network);
+        adRevenue.setAdRevenuePlacement(placement);
+        Adjust.trackAdRevenue(adRevenue);
     }
 
+    // send IAP revenue to adjust
     @Override
     public void trackInAppPurchase(String productId,
                                    double revenue,
                                    String currency,
                                    String orderId,
                                    String purchaseToken) {
-//        if (!hasAdjust()) {
-//            return;
-//        }
-//        AdjustEvent adjustEvent = new AdjustEvent(mSDKConfig.adjustPurchaseEvent);
-//        adjustEvent.setProductId(productId);
-//        adjustEvent.setRevenue(revenue, currency);
-//        adjustEvent.setOrderId(orderId);
-//        adjustEvent.setPurchaseToken(purchaseToken);
-//        Adjust.trackEvent(adjustEvent);
+        if (!hasAdjust()) {
+            return;
+        }
+        SDKLog.i("Adjust", "track in app purchase " + productId + "," + revenue + "" + currency);
+        AdjustEvent adjustEvent = new AdjustEvent(mSDKConfig.adjustPurchaseEvent);
+        adjustEvent.setProductId(productId);
+        adjustEvent.setRevenue(revenue, currency);
+        adjustEvent.setOrderId(orderId);
+        adjustEvent.setPurchaseToken(purchaseToken);
+        Adjust.trackEvent(adjustEvent);
     }
+
+    // send subscription revenue to adjust
     @Override
     public void trackSubscription(long price,
                                   String currency,
@@ -146,6 +156,7 @@ public class AdjustImpl implements IAdjust {
         Adjust.trackPlayStoreSubscription(subscription);
     }
 
+    // track session start
     @Override
     public void onResume() {
         if (!hasAdjust()) {
@@ -160,6 +171,7 @@ public class AdjustImpl implements IAdjust {
         }
     }
 
+    // track session end
     @Override
     public void onPause() {
         if (!hasAdjust()) {

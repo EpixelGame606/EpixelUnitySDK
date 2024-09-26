@@ -12,8 +12,10 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.Map;
 
+// implement firebase analytics
 public class AnalyticsImpl implements IAnalytics {
 
+    // send game event to Firebase analytics
     @Override
     public void logEvent(String eventName, String dataJson) {
         JSONObject jsonObject;
@@ -38,6 +40,7 @@ public class AnalyticsImpl implements IAnalytics {
         });
     }
 
+    // send game event to Firebase analytics
     @Override
     public void logEvent(String eventName, Map<String, String> data) {
         Bundle bundle = new Bundle();

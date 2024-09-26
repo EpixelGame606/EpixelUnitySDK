@@ -9,6 +9,7 @@ import com.android.billingclient.api.QueryProductDetailsParams;
 import java.util.ArrayList;
 import java.util.List;
 
+// query both in-app products and subscriptions
 public class QueryProduct {
 
     private boolean inAppFinished = false;

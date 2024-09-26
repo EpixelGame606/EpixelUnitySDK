@@ -10,6 +10,7 @@ import com.epixel.sdk.unity.UnitySDK;
 
 import java.util.HashMap;
 
+// listen to callbacks from banner ads and notify Unity game
 public class BannerAdListener implements MaxAdRevenueListener, MaxAdViewAdListener {
 
     private final UnityAdListener mListener;

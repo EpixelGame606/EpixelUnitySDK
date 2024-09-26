@@ -14,4 +14,5 @@ public interface IAds {
     void showInterstitialAd(String adKey);
     void showBannerAd(String adKey);
     void hideBannerAd(String adKey);
+    void showDebugger();
 }

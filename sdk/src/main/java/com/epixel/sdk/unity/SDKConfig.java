@@ -2,11 +2,10 @@ package com.epixel.sdk.unity;
 
 import android.text.TextUtils;
 
-import com.vungle.ads.internal.model.AdPayload;
-
 import java.util.ArrayList;
 import java.util.List;
 
+// basic configs for Adjust and Applovin Ads
 public class SDKConfig {
     public String facebookAppId;
     public String adjustToken;

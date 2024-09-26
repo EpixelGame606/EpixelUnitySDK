@@ -10,6 +10,7 @@ import com.epixel.sdk.unity.UnitySDK;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// query purchase information of products and subscriptions
 public class QueryPurchase {
 
     private int mResponseCode = BillingClient.BillingResponseCode.OK;

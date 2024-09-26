@@ -10,6 +10,7 @@ import com.epixel.sdk.unity.UnitySDK;
 
 import java.util.HashMap;
 
+// listen to events from applovin interstitial ad
 public class InterstitialAdListener implements MaxAdRevenueListener, MaxAdListener {
 
     private final UnityAdListener mListener;

@@ -9,6 +9,7 @@ import com.epixel.sdk.unity.utils.SDKLog;
 
 public class FirebaseImpl implements IFirebase {
 
+    // initialize firebase
     public void init(Context context) {
         FirebaseApp.initializeApp(context);
 

@@ -32,10 +32,10 @@ public class UnitySDK {
     private static IAds adsImpl;
     private static IAnalytics analyticsImpl;
 
+    // initialize epixel SDK
     public static void initBaseSDK(Application application) {
 
         String configStr = loadConfigFile(application, "sdk_config.json");
-        SDKLog.w("config json " + configStr);
 
         if (!TextUtils.isEmpty(configStr)) {
             sdkConfig = new Gson().fromJson(configStr, SDKConfig.class);
@@ -84,6 +84,8 @@ public class UnitySDK {
         }
         return firebaseImpl;
     }
+
+    // bridge adjust to Unity game
     public static IAdjust getAdjust() {
         if (adjustImpl == null) {
             adjustImpl = new AdjustImpl();
@@ -91,6 +93,7 @@ public class UnitySDK {
         return adjustImpl;
     }
 
+    // bridge in-app billing to Unity game
     public static IBillingClient getBillingClient() {
         if (billingClient == null) {
             billingClient = new MyBillingClient();
@@ -98,6 +101,7 @@ public class UnitySDK {
         return billingClient;
     }
 
+    // bridge applovin ads to Unity game
     public static IAds getAds() {
         if (adsImpl == null) {
             adsImpl = new AdsImpl();
@@ -105,6 +109,7 @@ public class UnitySDK {
         return adsImpl;
     }
 
+    // bridge firebase analytics to Unity game
     public static IAnalytics getAnalytics() {
         if (analyticsImpl == null) {
             analyticsImpl = new AnalyticsImpl();

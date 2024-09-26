@@ -5,7 +5,7 @@ import android.util.Log;
 
 public class SDKLog {
 
-    private static final boolean showLog = true;
+    private static final boolean showLog = false;
 
     public static void i(String log) {
         if (showLog) {

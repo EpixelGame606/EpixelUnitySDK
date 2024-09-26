@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class BillingBridgeHelper {
+    // format purchase details to json and send to Unity game
     @Nullable
     public static String productDetailToJson(List<ProductDetails> productDetails) {
         try {

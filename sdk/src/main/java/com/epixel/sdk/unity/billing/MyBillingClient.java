@@ -64,6 +64,7 @@ public class MyBillingClient implements IBillingClient {
         return mMainHandler;
     }
 
+    // initialize billing client on game start
     @Override
     public void initialize(String consumableProducts,
                            String subscriptionProducts,
@@ -84,6 +85,7 @@ public class MyBillingClient implements IBillingClient {
         mBillingClient.startConnection(mClientStateListener);
     }
 
+    // reconnect google service if connection lost
     private void reconnectService() {
         if (mReconnectionCount < 3) {
             mReconnectionCount++;
@@ -91,6 +93,7 @@ public class MyBillingClient implements IBillingClient {
         }
     }
 
+    // google service connected
     private void onServiceConnected() {
         mReconnectionCount = 0;
         if (mInitListener != null) {
@@ -98,18 +101,21 @@ public class MyBillingClient implements IBillingClient {
         }
     }
 
+    // query information about in-app products
     @Override
     public void queryProducts(QueryProductListener listener) {
         QueryProduct queryProduct = new QueryProduct();
         queryProduct.query(mBillingClient, mConsumableProducts, mSubscriptionProducts, listener);
     }
 
+    // query purchases
     @Override
     public void queryPurchases(BillingUpdateListener listener) {
         QueryPurchase queryPurchase = new QueryPurchase(this);
         queryPurchase.query(mBillingClient, listener);
     }
 
+    // try start purchase flow
     @Override
     public void launchPurchase(String productId) {
         HashMap<String, String> data = new HashMap<>();
@@ -138,7 +144,6 @@ public class MyBillingClient implements IBillingClient {
                 launchPurchase(productDetails);
             }
             else {
-                // 未能查询到商品
                 HashMap<String, String> failData = new HashMap<>();
                 failData.put("product_id", productId);
                 failData.put("error_code", String.valueOf(responseCode));
@@ -154,12 +159,12 @@ public class MyBillingClient implements IBillingClient {
         });
     }
 
+    // try start purchase flow
     private void launchPurchase(ProductDetails productDetails) {
         BillingFlowParams.ProductDetailsParams productDetailsParams;
         if (BillingClient.ProductType.SUBS.equals(productDetails.getProductType())) {
             List<ProductDetails.SubscriptionOfferDetails> subscriptionOfferDetails = productDetails.getSubscriptionOfferDetails();
             if (subscriptionOfferDetails != null && subscriptionOfferDetails.size() > 0) {
-                //TODO other offer token?
                 String offerToken = subscriptionOfferDetails.get(0).getOfferToken();
                 SDKLog.i("IAP", "subscription offer token " + offerToken);
                 productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
@@ -194,7 +199,6 @@ public class MyBillingClient implements IBillingClient {
             BillingResult billingResult = mBillingClient.launchBillingFlow(UnityPlayer.currentActivity, params);
             if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 SDKLog.w("IAP", "launch billing flow error " + billingResult.getResponseCode() + ", " + billingResult.getDebugMessage());
-                // 无法正常启动GP购买弹窗
                 HashMap<String, String> failData = new HashMap<>();
                 failData.put("product_id", productDetails.getProductId());
                 failData.put("error_code", String.valueOf(billingResult.getResponseCode()));
@@ -210,7 +214,7 @@ public class MyBillingClient implements IBillingClient {
         });
     }
 
-    // launch billing flow后触发的回调
+    // listen purchase updates
     private void onPurchasesUpdated(BillingResult billingResult, List<Purchase> list) {
         SDKLog.i("IAP", "purchase updated: " + billingResult.getResponseCode() + "," + mUpdateListener);
         if (list != null && list.size() > 0) {
@@ -262,6 +266,7 @@ public class MyBillingClient implements IBillingClient {
         }
     }
 
+    // acknowledge purchase after users get product in game
     @Override
     public void acknowledgePurchase(String productId, String orderId, String purchaseToken, BillingConsumeListener consumeListener) {
         HashMap<String, String> data = new HashMap<>();
@@ -318,6 +323,7 @@ public class MyBillingClient implements IBillingClient {
         }
     }
 
+    // send revenue data to Adjust
     private void trackInAppPurchaseByAdjust(String productId, String purchaseToken) {
         List<QueryProductDetailsParams.Product> products = new ArrayList<>();
         QueryProductDetailsParams.Product productParams = QueryProductDetailsParams.Product.newBuilder()
@@ -342,6 +348,7 @@ public class MyBillingClient implements IBillingClient {
         });
     }
 
+    // send revenue data to Adjust
     private void trackSubscriptionByAdjust(String productId, String purchaseToken) {
         List<QueryProductDetailsParams.Product> products = new ArrayList<>();
         QueryProductDetailsParams.Product productParams = QueryProductDetailsParams.Product.newBuilder()

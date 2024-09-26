@@ -11,6 +11,7 @@ import com.epixel.sdk.unity.UnitySDK;
 
 import java.util.HashMap;
 
+// listen to events from applovin rewarded ad
 public class RewardedAdListener implements MaxRewardedAdListener, MaxAdRevenueListener {
     private final UnityAdListener mListener;
     private final String mAdKey;
